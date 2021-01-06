@@ -29,13 +29,11 @@ void Init_PWM(void)
     INA = 1;
     INB = 0;
     
-    // Set up PWM Time Base
-    PTCONbits.PTEN = 1;         // Enable PWM Module
-
+    PTCONbits.PTEN = 0;         // Disable PWM Module
     // Set up Primary Master PWM Time Base
-    // Tcy = 8MHz / 2 Prescaler / 255 = 15.625kHz switching frequency
+    // Tcy = 80MHz / 16 Prescaler / 256 = 19.5kHz switching frequency
     // PWM Module 1:
-    PTCON2bits.PCLKDIV = 0b001; // PWM Time Base Input Clock Prescaler is 1:2
+    PTCON2bits.PCLKDIV = 0b100; // PWM Time Base Input Clock Prescaler is 1:16
     PTPER = 255;                // PWM Time Base Register will count up and reset on match
 
     // PWM Module 1:
@@ -44,7 +42,10 @@ void Init_PWM(void)
     IOCON1bits.PMOD = 0b11;     // PWM I/O Pair in Independent Output Mode
     IOCON1bits.PENL = 1;        // PWM1L Pin Enabled (RE0)
     // Set up initial Duty Cycle to 50%
-    SDC1 = 50;                 // Control's PWM1L Output Pin  
+    SDC1 = 127;                 // Control's PWM1L Output Pin  
+    
+    // Set up PWM Time Base
+    PTCONbits.PTEN = 1;         // Enable PWM Module
 }
 
 void PWM_SetDutyCycle(int dc)
